@@ -56,7 +56,7 @@
         <span>Search Branch</span>
       <Select
       items={$userbranch}
-      bind:value={branch}						
+      bind:justValue={branch}						
       label="name"
       itemId="id"	
       multiple

@@ -70,7 +70,7 @@
   <span>Search Sub Status</span>
 <Select
 items={mainstatus.substatus}
-bind:value={sub_status}						
+bind:justValue={sub_status}						
 label="name"
 itemId="id"	
 class="text-black bg-gray-600"
@@ -85,7 +85,7 @@ class="text-black bg-gray-600"
     <span>Search Branch</span>
   <Select
   items={$userbranch}
-  bind:value={branch}						
+  bind:justValue={branch}						
   label="name"
   itemId="id"	
   multiple
@@ -415,7 +415,6 @@ const searchSubmit=async()=>{
         searchdata+="&filters=" +"[\"name\",\"like\", \""+searchQuery+"\"]"
        }
      if (myselect ) {
-      console.log("sdf",myselect)
      searchdata+="&calltype=" +myselect.type
     }  
     if (main_status &&main_status.id  ) {

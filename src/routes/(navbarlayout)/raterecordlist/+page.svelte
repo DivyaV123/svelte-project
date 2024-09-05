@@ -72,9 +72,10 @@
   <span>Search Sub Status</span>
 <Select
 items={mainstatus.substatus}
-bind:value={sub_status}						
+bind:justValue={sub_status}						
 label="name"
 itemId="id"	
+multiple
 class="text-black bg-gray-600"
 --background= "gray transparent"
 --selected-item-color="white"  
@@ -87,7 +88,7 @@ class="text-black bg-gray-600"
     <span>Search Branch</span>
   <Select
   items={$userbranch}
-  bind:value={branch}						
+  bind:justValue={branch}						
   label="name"
   itemId="id"	
   multiple
@@ -321,6 +322,7 @@ import Updatestatus from '$lib/Components/Updatestatus.svelte';
 import ViewEnq from '$lib/Components/ViewEnq.svelte';
 import UpdateCourse from '$lib/Components/UpdateCourse.svelte';
 import Select from 'svelte-select'; 
+	import { branches_min } from '../../../stores/counselor';
 
  dayjs.extend(utc)
  const modalStore = getModalStore();
@@ -630,11 +632,10 @@ const searchSubmit=async()=>{
         searchdata+="&filters=" +"[\"name\",\"like\", \""+searchQuery+"\"]"
        }
      if (myselect ) {
-      console.log("sdf",myselect)
      searchdata+="&calltype=" +myselect.type
     }  
-    if (main_status &&main_status.id  ) {
-  searchdata+="&status=" +main_status.id
+    if (mainstatus ) {
+  searchdata+="&status=" +mainstatus.id
     ;}
     if (sub_status ) {
   searchdata+="&substatus=" +sub_status.join()
