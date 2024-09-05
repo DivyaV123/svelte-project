@@ -1,0 +1,115 @@
+<script lang="ts">
+	import type { SvelteComponent } from 'svelte';
+	import { getModalStore } from '@skeletonlabs/skeleton';
+	import {mainStore,add_internal} from '../../stores/general'
+import { Toast, getToastStore } from '@skeletonlabs/skeleton';
+import type { ToastSettings, ToastStore } from '@skeletonlabs/skeleton';
+	// Props
+	/** Exposes parent props to this component. */
+	export let parent: SvelteComponent;
+	const modalStore = getModalStore();
+	const toastStore=getToastStore()
+  const general=mainStore()
+const formData = {
+name:$modalStore[0].props.name ,
+verified:false,
+username:"",
+details:{
+  team_name:''
+ }
+	};
+
+const checkString = (text) => {
+  // var letters = /^[a-zA-Z\s]*$/;
+   var letters = /^\S/;
+  if (text.match(letters)) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
+async function onFormSubmit(): void {
+		let valid = true
+let formValues = JSON.parse(JSON.stringify(formData))
+
+   if(valid){
+	var response = await general.addinternal(formValues)
+    Object.assign(formData, {
+        name:$modalStore[0].props.name,
+    verified:false,
+    username:"",
+    details:{
+     team_name:''
+     }
+    })
+	if ($modalStore[0].response) $modalStore[0].response(formData);
+    toastStore.trigger({message:$add_internal.message})
+     modalStore.close();
+  }
+  else {
+    // formLoading.value = false
+    // mainStore.pushMessage("Form Error, please fill out mandatory fields");
+  }
+   
+		// if ($modalStore[0].response) $modalStore[0].response(formData);
+		// modalStore.close();
+	}
+
+	// Base Classes
+	const cBase = 'card p-4 w-modal shadow-xl space-y-4';
+	const cHeader = 'text-2xl font-bold';
+	const cButton = 'absolute z-1 btn-icon variant-filled';
+	const cForm = 'border border-surface-500 p-4 space-y-4 rounded-container-token';
+</script>
+
+<!-- {#if $modalStore}
+<div class="w-[50%] h-[60%]">
+	<button class={cButton} on:click={parent.onClose}>✕</button>
+	<form class="modal-form ">
+		<label class="label">
+			<span>Name</span>
+			<input class="input" type="text"  placeholder="Enter name..." />
+		</label>
+		<label class="label">
+			<span>Phone Number</span>
+			<input class="input" type="tel" placeholder="Enter phone..." />
+		</label>
+		<label class="label">
+			<span>Email</span>
+			<input class="input" type="email" placeholder="Enter email address..." />
+		</label>
+	</form>
+</div>
+{/if} -->
+
+<Toast />
+{#if $modalStore[0]}
+	<div class="modal-example-form {cBase}">
+		<!-- {$modalStore[0].props.name} -->
+		<header class={cHeader}>{$modalStore[0].title}<span class="text-lg">{$modalStore[0].props.name }</span></header>
+		<!-- <article>{$modalStore[0].body ?? '(body missing)'}</article> -->
+		<!-- Enable for debugging: -->
+		<!-- <button class={cButton} on:click={parent.onClose}>✕</button> -->
+		<form class="modal-form {cForm}">
+			<label class="label">
+				<span>Number</span>
+				<input class="input" type="tel" bind:value={formData.name} placeholder="Enter number..." />
+			</label>
+            <label class="label">
+				<span>Name</span>
+				<input class="input" type="text" bind:value={formData.username} placeholder="Enter name..." />
+			</label>
+            <label class="label">
+				<span>Team Name</span>
+				<input class="input" type="text" bind:value={formData.details.team_name} placeholder="Enter Team name..." />
+			</label>
+
+		</form>
+		<!-- prettier-ignore -->
+		<footer class="modal-footer {parent.regionFooter}">
+			<button class="btn {parent.buttonNeutral}" on:click={parent.onClose}>{parent.buttonTextCancel}</button>
+			<button class="btn {parent.buttonPositive}" on:click={onFormSubmit}>Done</button>
+		</footer>
+	</div>
+{/if}
